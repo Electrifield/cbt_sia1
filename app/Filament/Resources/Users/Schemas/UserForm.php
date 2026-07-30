@@ -37,25 +37,30 @@ class UserForm
                             ->required()
                             ->columnSpanFull(),
                         TextInput::make('email')
-                            ->label('Email address')
+                            ->label('Alamat email')
+                            ->unique('users', 'email')
+                            ->prefix('@')
                             ->email(),
                         TextInput::make('username')
-                            ->label('Login Username')
+                            ->label('Login username')
                             // harus unique dengan user yang lain
                             ->unique(
                                 table: 'users',
                                 column: 'username',
                             )
+                            ->placeholder('Digunakan untuk login akun')
+                            ->helperText('Username harus unik.')
                             ->required(),
                         TextInput::make('phone')
-                            ->label('Nomor Telepom')
+                            ->label('Nomor telepon')
+                            // ->prefixIcon('heroicon-o-phone')
                             ->prefixIcon(Heroicon::OutlinedPhone)
                             ->tel(),
-                        Toggle::make('is_staff')
-                            ->required(),
 
                         TextInput::make('password')
-                            ->hiddenOn('edit')      //disembunyikan di tabel admin
+                            // disembunyikan di halaman edit
+                            ->hiddenOn('edit')
+                            // tampilkan password
                             ->revealable()
                             ->password()
                             ->required(),

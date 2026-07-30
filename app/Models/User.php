@@ -4,16 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Models\Contracts\HasAvatar;
-use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
-use Override;
+use Illuminate\Contracts\Filesystem\Filesystem;
+
+use Filament\Panel;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 
 #[Fillable([
     'name',
@@ -30,19 +31,17 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-
-    // Autorisasi user agar dapat login ke filament panel
-    #[Override]
+    // Autorisasi user agar dapat login ke Filament Panel
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_staff;
     }
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -56,30 +55,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function getFilamentAvatarUrl(): ?string
     {
         // cek apakah user punya foto tersimpan
-        if ($this->photo_path && Storage::disk('public')->exists($this->photo_path)
-    ) {
-        // use Illuminate\Support\Facades\Storage;
-        return Storage::disk('public')->url($this->photo_path);     // return url potp
+        if (
+            $this->photo_path &&
+            Storage::disk('public')->exists($this->photo_path)
+        ) {
+            // return url foto (use Storage::url to satisfy static analysis)
+            // return Storage::disk('public')->url($this->photo_path);
+            return Storage::url($this->photo_path);
         }
         return null;
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Hapus foto lama dari storage saat photo_path diupdate
-        static::updating(function (User $user) {
-            if ($user->isDirty('photo_path') && $user->getOriginal('photo_path')) {
-                Storage::disk('public')->delete($user->getOriginal('photo_path'));
-            }
-        });
-
-        // Hapus foto dari storage saat user dihapus
-        static::deleting(function (User $user) {
-            if ($user->photo_path) {
-                Storage::disk('public')->delete($user->photo_path);
-            }
-        });
     }
 }
