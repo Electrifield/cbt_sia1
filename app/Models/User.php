@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Contracts\Filesystem\Filesystem;
 
 use Filament\Panel;
 use Filament\Models\Contracts\FilamentUser;
@@ -59,9 +58,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             $this->photo_path &&
             Storage::disk('public')->exists($this->photo_path)
         ) {
-            // return url foto (use Storage::url to satisfy static analysis)
-            // return Storage::disk('public')->url($this->photo_path);
-            return Storage::url($this->photo_path);
+            // return url foto
+            return Storage::disk('public')->url($this->photo_path);
         }
         return null;
     }

@@ -25,5 +25,10 @@ class DatabaseSeeder extends Seeder
             'is_staff' => true,
             'password' => Hash::make('rahasia'),
         ]);
+
+        // 2. PANGGIL QUESTION SEEDER DI SINI
+        $this->call([
+            QuestionSeeder::class,
+        ]);
     }
 }
