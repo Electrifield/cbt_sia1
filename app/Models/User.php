@@ -50,6 +50,29 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         ];
     }
 
+    /**
+     * Method untuk menangani event model.
+     */
+    protected static function booted(): void
+    {
+        // Berjalan tepat SEBELUM data di-update ke database
+        static::updating(function ($model) {
+            // Cek apakah ada perubahan pada kolom 'photo_path' dan apakah data aslinya ada
+            if ($model->isDirty('photo_path') && ($model->getOriginal('photo_path') !== null)) {
+                // Hapus file foto yang lama dari storage
+                Storage::disk('public')->delete($model->getOriginal('photo_path'));
+            }
+        });
+
+        // (Opsional) Berjalan saat data user dihapus
+        static::deleted(function ($model) {
+            // Bersihkan file fotonya juga saat user dihapus
+            if ($model->photo_path !== null) {
+                Storage::disk('public')->delete($model->photo_path);
+            }
+        });
+    }
+
     // user avatar url
     public function getFilamentAvatarUrl(): ?string
     {
