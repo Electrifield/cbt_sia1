@@ -56,7 +56,9 @@ class UserForm
                             // ->prefixIcon('heroicon-o-phone')
                             ->prefixIcon(Heroicon::OutlinedPhone)
                             ->tel(),
-
+                        Toggle::make('is_staff')
+                            ->label('Apakah Staff?')
+                            ->required(),
                         TextInput::make('password')
                             // disembunyikan di halaman edit
                             ->hiddenOn('edit')

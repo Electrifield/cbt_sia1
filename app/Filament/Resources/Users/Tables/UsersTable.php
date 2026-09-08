@@ -7,6 +7,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -19,7 +20,7 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('number')
-                    ->label('No.')  // dengan judul kolom
+                    ->label('No')  // dengan judul kolom
                     ->rowIndex()    // method penomoran baris
                     ->width(40),
                 ImageColumn::make('avatar')
@@ -43,8 +44,8 @@ class UsersTable
                     ->placeholder('-')  // Teks yang ditampilkan jika null
                     ->searchable()
                     ->toggleable(),
-                // IconColumn::make('is_staff')
-                //     ->boolean(),
+                IconColumn::make('is_staff')
+                    ->boolean(),
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d F Y, H:i:s')
@@ -62,6 +63,7 @@ class UsersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
