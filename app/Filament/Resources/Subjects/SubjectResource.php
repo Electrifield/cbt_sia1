@@ -29,7 +29,6 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Laravel\SerializableClosure\Serializers\Native;
 use UnitEnum;
 
 class SubjectResource extends Resource
@@ -42,7 +41,7 @@ class SubjectResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Basis Data';
 
-    protected static ?string $modelLabel = 'Pelajaran';
+    protected static ?string $modelLabel = 'pelajaran';
 
     protected static ?string $navigationLabel = 'Data Pelajaran';
 
@@ -51,25 +50,25 @@ class SubjectResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
-                ->label('Nama Pelajaran')
-                ->placeholder('Nama Mata Pelajaran')
-                ->columnSpanFull()
-                ->unique('subjects', 'name')
+                    ->label('Mata pelajaran')
+                    ->placeholder('Nama mata pelajaran')
+                    ->columnSpanFull()
+                    ->unique('subjects', 'name')
                     ->required(),
                 Textarea::make('description')
                     ->label('Deskripsi')
                     ->placeholder('Keterangan tambahan')
                     ->columnSpanFull(),
                 Toggle::make('is_active')
-                    ->label(label: 'Tersedia')
+                    ->label('Tersedia')
                     ->default(true)
                     ->inline(false)
                     ->live()
                     ->helperText(
-                        fn ($state) 
-                        => $state ? 'Pelajaran ini tersedia untuk diujiankan.'
-                        : 'Pelajaran ini tidak tersedia untuk diujiankan.'
-                        ),
+                        fn ($state) => $state
+                            ? 'Pelajaran ini tersedia untuk diujiankan.'
+                            : 'Pelajaran ini tidak tersedia untuk diujiankan.'
+                    ),
             ]);
     }
 
@@ -78,7 +77,7 @@ class SubjectResource extends Resource
         return $schema
             ->components([
                 TextEntry::make('name')
-                    ->label('Nama Mata Pelajaran'),
+                    ->label('Nama mata pelajaran'),
                 IconEntry::make('is_active')
                     ->label('Tersedia')
                     ->boolean(),
@@ -88,15 +87,15 @@ class SubjectResource extends Resource
                     ->columnSpanFull(),
                 TextEntry::make('deleted_at')
                     ->label('Dihapus')
-                    ->dateTime('d M Y H:i:s')
+                    ->dateTime('d F Y, H:i:s')
                     ->visible(fn (Subject $record): bool => $record->trashed()),
                 TextEntry::make('created_at')
                     ->label('Dibuat')
-                    ->dateTime('d M Y H:i:s')
+                    ->dateTime('d F Y, H:i:s')
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
-                    ->label('Diperbarui')
-                    ->dateTime('d M Y H:i:s')
+                    ->label('Diubah')
+                    ->dateTime('d F Y, H:i:s')
                     ->placeholder('-'),
             ]);
     }
@@ -107,11 +106,11 @@ class SubjectResource extends Resource
             ->recordTitleAttribute('name')
             ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make('No')
+                TextColumn::make('#')
                     ->rowIndex()
                     ->width(40),
                 TextColumn::make('name')
-                    ->label('Nama Pelajaran')
+                    ->label('Pelajaran')
                     ->searchable(),
                 IconColumn::make('is_active')
                     ->label('Tersedia')
@@ -127,17 +126,17 @@ class SubjectResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->label('Diperbarui')
+                    ->label('Diubah')
                     ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
-                    ->label('Status Pelajaran')
-                    ->placeholder('Pilih Salah satu status')
+                    ->label('Status pelajaran')
+                    ->placeholder('Pilih salah satu')
                     ->trueLabel('Tersedia')
-                    ->falseLabel('Tidak Tersedia')
+                    ->falseLabel('Tidak tersedia')
                     ->native(false),
                 TrashedFilter::make()
                     ->native(false),
