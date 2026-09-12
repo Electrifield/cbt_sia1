@@ -72,6 +72,6 @@ class QuestionForm
                                     ->label('Jawaban benar'),
                             ]),
                     ])
-                ]);
+            ]);
     }
 }

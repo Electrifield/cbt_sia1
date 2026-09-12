@@ -42,7 +42,7 @@ class QuestionInfolist
                     ->boolean(),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn (Question $record): bool => $record->trashed()),
+                    ->visible(fn(Question $record): bool => $record->trashed()),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),
