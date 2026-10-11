@@ -11,7 +11,6 @@ use Override;
 class Student extends Model
 {
     use SoftDeletes;
-
     protected $guarded = [];
 
     #[Override]
@@ -23,7 +22,7 @@ class Student extends Model
         ];
     }
 
-    // relasi ke tabel users
+    // relasi antar tabel
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

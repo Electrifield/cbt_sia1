@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Students\Schemas;
 
-use App\Models\Student;
-use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -14,23 +12,16 @@ class StudentInfolist
         return $schema
             ->components([
                 TextEntry::make('reg_year')
-                    ->label('Tahun masuk'),
+                    ->label('Stambuk'),
                 TextEntry::make('nis')
-                    ->label('Nomor Induk Siswa'),
+                    ->label('NIS'),
                 TextEntry::make('name')
-                    ->label('Nama lengkap')
-                    ->columnSpanFull(),
+                    ->label('Nama Siswa'),
                 TextEntry::make('gender')
-                    ->formatStateUsing(
-                        fn(bool $state) => $state
-                            ? 'Laki-laki'
-                            : 'Perempuan'
-                    ),
+                    ->label('Jenis Kelamin')
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Laki-laki' : 'Perempuan'),
                 TextEntry::make('status')
                     ->badge(),
-                TextEntry::make('deleted_at')
-                    ->dateTime()
-                    ->visible(fn(Student $record): bool => $record->trashed()),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),

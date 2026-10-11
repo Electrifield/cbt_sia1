@@ -22,29 +22,30 @@ class QuestionForm
                     ->columnSpanFull()
                     ->schema([
                         Select::make('subject_id')
-                            ->label('Pelajaran')
                             ->relationship('subject', 'name')
-                            ->native(false)
-                            ->preload()
                             ->required(),
+
                         TextInput::make('score')
-                            ->label('Bobot nilai')
+                            ->label('Bobot Nilai')
                             ->required()
                             ->numeric()
                             ->default(1)
                             ->minValue(0),
-                        // Bagian soal
+
+                        // Bagian Soal
                         RichEditor::make('payload')
                             ->label('Pertanyaan')
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsDirectory('question-images')
                             ->required()
                             ->columnSpanFull(),
+
                         Textarea::make('description')
                             ->label('Keterangan tambahan')
                             ->columnSpanFull(),
+
                         Toggle::make('is_active')
-                            ->label('Aktif?')
+                            ->label('Aktif')
                             ->inline(false)
                             ->default(true)
                             ->required(),
@@ -55,8 +56,8 @@ class QuestionForm
                     ->schema([
                         Repeater::make('answers')
                             ->relationship()
-                            ->label('Pilihan jawaban')
-                            ->addActionLabel('Tambah pilihan baru')
+                            ->label('Pilihan Jawaban')
+                            ->addActionLabel('Tambah Pilihan baru')
                             ->reorderable()
                             ->columns(2)
                             ->minItems(2)
@@ -65,13 +66,15 @@ class QuestionForm
                                     ->label('Deskripsi pilihan')
                                     ->required()
                                     ->columnSpanFull(),
+
                                 Toggle::make('is_active')
                                     ->label('Tersedia')
                                     ->default(true),
+
                                 Toggle::make('is_correct')
                                     ->label('Jawaban benar'),
                             ]),
-                    ])
+                    ]),
             ]);
     }
 }

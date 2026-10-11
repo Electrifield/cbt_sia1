@@ -6,23 +6,32 @@ use App\Filament\Resources\Exams\Pages\CreateExam;
 use App\Filament\Resources\Exams\Pages\EditExam;
 use App\Filament\Resources\Exams\Pages\ListExams;
 use App\Filament\Resources\Exams\Pages\ViewExam;
+use App\Filament\Resources\Exams\RelationManagers\SubjectsRelationManager;
 use App\Filament\Resources\Exams\Schemas\ExamForm;
 use App\Filament\Resources\Exams\Schemas\ExamInfolist;
 use App\Filament\Resources\Exams\Tables\ExamsTable;
 use App\Models\Exam;
+use App\Models\Subject;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ExamResource extends Resource
 {
     protected static ?string $model = Exam::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static ?string $recordTitleAttribute = 'exam';
+    protected static string|UnitEnum|null $navigationGroup = 'Ujian';
+
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $navigationLabel = 'Exams';
+
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Schema $schema): Schema
     {
@@ -42,7 +51,7 @@ class ExamResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SubjectsRelationManager::class,
         ];
     }
 

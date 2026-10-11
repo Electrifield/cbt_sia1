@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Subjects;
 
+use App\Filament\Resources\Questions\QuestionResource;
 use App\Filament\Resources\Subjects\Pages\ManageSubjects;
 use App\Models\Subject;
 use BackedEnum;
@@ -29,35 +30,41 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use PhpParser\Node\Stmt\Label;
 use UnitEnum;
 
 class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookmarkSquare;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Pelajaran';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Basis Data';
-
-    protected static ?string $modelLabel = 'pelajaran';
+    protected static ?string $modelLabel = 'Pelajaran';
 
     protected static ?string $navigationLabel = 'Data Pelajaran';
+
+    // ganti teks pada url (slug)
+    protected static ?string $slug = 'data-pelajaran';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Mata pelajaran')
-                    ->placeholder('Nama mata pelajaran')
+                    ->label('Mata Pelajaran')
+                    ->placeholder('Nama Mata Pelajaran')
                     ->columnSpanFull()
                     ->unique('subjects', 'name')
                     ->required(),
                 Textarea::make('description')
                     ->label('Deskripsi')
-                    ->placeholder('Keterangan tambahan')
+                    ->placeholder('Keterangan Tambahan')
                     ->columnSpanFull(),
                 Toggle::make('is_active')
                     ->label('Tersedia')
@@ -65,10 +72,11 @@ class SubjectResource extends Resource
                     ->inline(false)
                     ->live()
                     ->helperText(
-                        fn ($state) => $state
+                        fn($state) => $state
                             ? 'Pelajaran ini tersedia untuk diujiankan.'
                             : 'Pelajaran ini tidak tersedia untuk diujiankan.'
-                    ),
+                    )
+                // ->helperText('Pelajaran ini tersedia untuk diujiankan.'),
             ]);
     }
 
@@ -77,7 +85,7 @@ class SubjectResource extends Resource
         return $schema
             ->components([
                 TextEntry::make('name')
-                    ->label('Nama mata pelajaran'),
+                    ->label('Nama Mata Pelajaran'),
                 IconEntry::make('is_active')
                     ->label('Tersedia')
                     ->boolean(),
@@ -88,14 +96,14 @@ class SubjectResource extends Resource
                 TextEntry::make('deleted_at')
                     ->label('Dihapus')
                     ->dateTime('d F Y, H:i:s')
-                    ->visible(fn (Subject $record): bool => $record->trashed()),
+                    ->visible(fn(Subject $record): bool => $record->trashed()),
                 TextEntry::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d F Y, H:i:s')
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
                     ->label('Diubah')
-                    ->dateTime('d F Y, H:i:s')
+                    ->dateTime('d F Y: H:i:s')
                     ->placeholder('-'),
             ]);
     }
@@ -106,7 +114,7 @@ class SubjectResource extends Resource
             ->recordTitleAttribute('name')
             ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make('#')
+                TextColumn::make('No')
                     ->rowIndex()
                     ->width(40),
                 TextColumn::make('name')
@@ -115,13 +123,17 @@ class SubjectResource extends Resource
                 IconColumn::make('is_active')
                     ->label('Tersedia')
                     ->boolean(),
+                TextColumn::make('questions_count')
+                    ->label('Jumlah Soal')
+                    ->counts('questions')
+                    ->badge(),
                 TextColumn::make('deleted_at')
                     ->label('Dihapus')
                     ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
-                    ->label('Dibuat')
+                    ->label('Ditambah')
                     ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -133,16 +145,22 @@ class SubjectResource extends Resource
             ])
             ->filters([
                 TernaryFilter::make('is_active')
-                    ->label('Status pelajaran')
-                    ->placeholder('Pilih salah satu')
+                    ->label('Status Pelajaran')
+                    ->placeholder('Pilih Salah Satu')
                     ->trueLabel('Tersedia')
-                    ->falseLabel('Tidak tersedia')
+                    ->falseLabel('Tidak Tersedia')
                     ->native(false),
                 TrashedFilter::make()
                     ->native(false),
             ])
             ->recordActions([
-                ViewAction::make(),
+                ViewAction::make()
+                    ->label('Lihat Soal')
+                    ->url(fn(Subject $record): string => QuestionResource::getUrl('index', [
+                        'filters' => [
+                            'subject_id' => ['value' => $record->id],
+                        ],
+                    ])),
                 EditAction::make(),
                 DeleteAction::make(),
                 ForceDeleteAction::make(),

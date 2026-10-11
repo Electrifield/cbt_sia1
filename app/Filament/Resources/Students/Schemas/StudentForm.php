@@ -6,7 +6,6 @@ use App\StudentStatusEnum;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -21,23 +20,23 @@ class StudentForm
                     ->columnSpanFull()
                     ->schema([
                         TextInput::make('reg_year')
-                            ->label('Tahun masuk')
+                            ->label('Stambuk')
                             ->required()
                             ->maxValue(now()->year)
-                            ->placeholder('Empat digit angka tahun masuk. Contoh: 2026')
+                            ->placeholder('Empat Digit Angka Tahun Masuk. Contoh: 2026')
                             ->numeric(),
                         TextInput::make('nis')
                             ->label('Nomor Induk Siswa')
-                            ->placeholder('Nomor unik registrasi siswa. Contoh: 2023020001')
+                            ->placeholder('Nomor Unik Registrasi Siswa. Contoh: 2023000001')
                             ->required()
-                            ->unique('students', 'nis'),
+                            ->unique('students', 'nis', ignoreRecord: true),
                         TextInput::make('name')
-                            ->label('Nama siswa')
-                            ->placeholder('Nama lengkap siswa')
+                            ->label('Nama Siswa')
+                            ->placeholder('Nama Lengkap Siswa')
                             ->required()
                             ->columnSpanFull(),
                         Radio::make('gender')
-                            ->label('Jenis kelamin')
+                            ->label('Jenis Kelamin')
                             ->options([
                                 true => 'Laki-laki',
                                 false => 'Perempuan',
@@ -50,7 +49,7 @@ class StudentForm
                             ->options(StudentStatusEnum::class)
                             ->default(1)
                             ->required(),
-                    ]),
+                    ])
             ]);
+        }
     }
-}

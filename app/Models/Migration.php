@@ -7,13 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 class Migration extends Model
 {
     protected $table = 'migrations';
-    public $timestamps = false; // Tabel ini tidak memiliki created_at dan updated_at
-    protected $fillable = ['migration', 'batch'];
 
-    protected function casts(): array
+    public $timestamps = false;
+
+    protected $guarded = [];
+
+    protected $casts = [
+        'batch' => 'integer',
+    ];
+
+    // Membaca isi asli file migration dari folder database/migrations,
+    
+    public function getFileContentAttribute(): string
     {
-        return [
-            'batch' => 'integer',
-        ];
+        $path = database_path("migrations/{$this->migration}.php");
+
+        if (! file_exists($path)) {
+            return "// File 'database/migrations/{$this->migration}.php' tidak ditemukan.\n// Kemungkinan nama migration di database tidak sesuai nama file aslinya,\n// atau file sudah dipindahkan/dihapus dari folder migrations.";
+        }
+
+        return file_get_contents($path);
     }
 }

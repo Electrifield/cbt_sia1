@@ -23,7 +23,7 @@ enum StudentStatusEnum: int implements HasLabel
             self::Leave => 'Cuti',
             self::Moved => 'Pindah',
             self::DropOut => 'Dikeluarkan',
-            default => 'Invalid',
+            default => 'invalid',
         };
     }
 }

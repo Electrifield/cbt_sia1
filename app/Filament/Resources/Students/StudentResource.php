@@ -23,15 +23,18 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Basis Data';
+    protected static string|UnitEnum|null $navigationGroup = 'Akun';
 
     protected static ?string $modelLabel = 'siswa';
 
     protected static ?string $navigationLabel = 'Data Siswa';
+
+    // ganti teks pada url (slug)
+    protected static ?string $slug = 'data-siswa';
 
     public static function form(Schema $schema): Schema
     {

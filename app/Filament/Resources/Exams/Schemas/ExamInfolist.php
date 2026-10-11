@@ -12,24 +12,32 @@ class ExamInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('title'),
+                TextEntry::make('title')
+                    ->label('Jenis Ujian'),
                 TextEntry::make('duration')
+                    ->label('Durasi')
                     ->numeric(),
                 TextEntry::make('threshold')
+                    ->label('Min. Nilai')
                     ->numeric(),
-                TextEntry::make('started_at')
-                    ->dateTime(),
-                TextEntry::make('expired_at')
-                    ->dateTime()
-                    ->placeholder('-'),
                 IconEntry::make('exact_time')
                     ->boolean(),
+                TextEntry::make('started_at')
+                    ->label('Mulai')
+                    ->dateTime(),
+                TextEntry::make('expired_at')
+                    ->label('Berakhir')
+                    ->dateTime()
+                    ->placeholder('-'),
                 IconEntry::make('is_available')
+                    ->label('Tersedia')
                     ->boolean(),
                 TextEntry::make('created_at')
+                    ->label('Dibuat')
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
+                    ->label('Update')
                     ->dateTime()
                     ->placeholder('-'),
             ]);

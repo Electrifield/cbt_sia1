@@ -17,21 +17,24 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use phpDocumentor\Reflection\Types\Null_;
 use UnitEnum;
 
 class QuestionResource extends Resource
 {
     protected static ?string $model = Question::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquare3Stack3d;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolderOpen;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Pelajaran';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Basis Data';
-
     protected static ?string $modelLabel = 'soal';
 
-    protected static ?string $navigationLabel = 'Bank Soal';
+    protected static ?string $navigationLabel = 'Olah Soal';
 
     public static function form(Schema $schema): Schema
     {

@@ -10,6 +10,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -20,11 +21,14 @@ class QuestionsTable
         return $table
             ->columns([
                 TextColumn::make('subject.name')
+                    ->label('Mata Pelajaran')
                     ->searchable(),
                 TextColumn::make('score')
+                    ->label('Bobot Nilai')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label('Aktif')
                     ->boolean(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
@@ -40,6 +44,12 @@ class QuestionsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                // Filter Mata Pelajaran (Wajib ada agar URL filter dari SubjectResource terbaca)
+                SelectFilter::make('subject_id')
+                    ->label('Mata Pelajaran')
+                    ->relationship('subject', 'name')
+                    ->searchable()
+                    ->preload(),
                 TrashedFilter::make(),
             ])
             ->recordActions([
